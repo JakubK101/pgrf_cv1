@@ -1,15 +1,13 @@
 import rasterdata.Presentable;
 import rasterdata.RasterImage;
 import rasterdata.RasterImageBI;
+import rasterops.Liner;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
@@ -31,6 +29,10 @@ public class Canvas {
 	private final RasterImage<Integer> img;
 
 	private final Presentable<Graphics> presenter;
+	private final Liner<Integer> liner;
+
+
+	private int c1,r1,c2,r2;
 
 	public Canvas(int width, int height) {
 		frame = new JFrame();
@@ -60,8 +62,19 @@ public class Canvas {
 		panel.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e) {
+				clear();
+
+
 				img.setPixel(e.getX(),e.getY(),0xff0000);
 				present();
+			}
+		});
+
+		panel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				c1= e.getX();
+				r1= e.getY();
 			}
 		});
 
