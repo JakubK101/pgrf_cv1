@@ -1,11 +1,13 @@
 package rasterdata;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Optional;
 
-public class RasterImageBI implements RasterImage<Integer>{
+public class RasterImageBI implements RasterImage<Integer>, Presentable<Graphics>{
 
     private final @NotNull BufferedImage bufferedImage;
 
@@ -36,5 +38,21 @@ public class RasterImageBI implements RasterImage<Integer>{
         if(getWidth() > c && getHeight() > r && c >= 0 && r >= 0){
             bufferedImage.setRGB(c, r, newValue);
         }
+
+    }
+
+    @Override
+    public void clear(@NotNull Integer newValue) {
+        final @Nullable Graphics g = bufferedImage.getGraphics();
+        if(g!=null){
+        g.setColor(new Color(newValue));
+        g.fillRect(0,0,getWidth(),getHeight());
+        }
+    }
+
+    @Override
+    public @NotNull Graphics present(@NotNull Graphics device) {
+        device.drawImage(bufferedImage, 0, 0, null);
+        return device;
     }
 }

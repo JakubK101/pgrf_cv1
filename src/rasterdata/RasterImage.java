@@ -37,5 +37,6 @@ public interface RasterImage<P> {
      * @param newValue new pixel value
      */
     void setPixel(final int c, final int r, final @NotNull P newValue);
+    void clear(final @NotNull P newValue);
 
 }

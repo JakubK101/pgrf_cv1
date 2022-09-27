@@ -1,7 +1,15 @@
+import rasterdata.Presentable;
+import rasterdata.RasterImage;
+import rasterdata.RasterImageBI;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
@@ -20,7 +28,9 @@ public class Canvas {
 
 	private JFrame frame;
 	private JPanel panel;
-	private BufferedImage img;
+	private final RasterImage<Integer> img;
+
+	private final Presentable<Graphics> presenter;
 
 	public Canvas(int width, int height) {
 		frame = new JFrame();
@@ -30,7 +40,10 @@ public class Canvas {
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-		img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		//img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		final RasterImageBI auxRasterImage = new RasterImageBI(width,height);
+		img = auxRasterImage;
+		presenter= auxRasterImage;
 
 		panel = new JPanel() {
 			private static final long serialVersionUID = 1L;
@@ -44,24 +57,47 @@ public class Canvas {
 
 		panel.setPreferredSize(new Dimension(width, height));
 
+		panel.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				img.setPixel(e.getX(),e.getY(),0xff0000);
+				present();
+			}
+		});
+
+		panel.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_C){
+				clear();
+				present();}
+			}
+		});
+
 		frame.add(panel, BorderLayout.CENTER);
 		frame.pack();
 		frame.setVisible(true);
+
+		panel.grabFocus();
 	}
 
 	public void clear() {
-		Graphics gr = img.getGraphics();
-		gr.setColor(new Color(0x2f2f2f));
-		gr.fillRect(0, 0, img.getWidth(), img.getHeight());
+		img.clear(0x2f2f2f);
 	}
 
 	public void present(Graphics graphics) {
-		graphics.drawImage(img, 0, 0, null);
+		presenter.present(graphics);
 	}
 
+	public void present(){
+		final Graphics g = panel.getGraphics();
+		if(g!=null){
+		presenter.present(g);}
+	}
 	public void draw() {
-		clear();
-		img.setRGB(10, 10, 0xffff00);
+
+
+
 	}
 
 	public void start() {
@@ -70,7 +106,8 @@ public class Canvas {
 	}
 
 	public static void main(String[] args) {
-		SwingUtilities.invokeLater(() -> new Canvas(800, 600).start());
+		SwingUtilities.invokeLater(() ->
+				new Canvas(800, 600).start());
 	}
 
 }
