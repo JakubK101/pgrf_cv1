@@ -2,6 +2,7 @@ import rasterdata.Presentable;
 import rasterdata.RasterImage;
 import rasterdata.RasterImageBI;
 import rasterops.Liner;
+import rasterops.TrivialLiner;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -46,6 +47,7 @@ public class Canvas {
 		final RasterImageBI auxRasterImage = new RasterImageBI(width,height);
 		img = auxRasterImage;
 		presenter= auxRasterImage;
+		liner= new TrivialLiner<>();
 
 		panel = new JPanel() {
 			private static final long serialVersionUID = 1L;
