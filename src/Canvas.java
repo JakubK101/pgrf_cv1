@@ -75,8 +75,14 @@ public class Canvas {
 		panel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
+
 				c1= e.getX();
 				r1= e.getY();
+				c2= e.getX();
+				r2=e.getY();
+				//liner.drawLine(c1,r1,c2,r2,0xff0000);
+
+
 			}
 		});
 
@@ -94,6 +100,7 @@ public class Canvas {
 		frame.setVisible(true);
 
 		panel.grabFocus();
+
 	}
 
 	public void clear() {
