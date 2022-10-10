@@ -12,6 +12,9 @@ public class Polygon2D {
     public List<Point2D> getPoints() {
         return points;
     }
+    public Point2D getPoint(int index){
+        return points.get(index);
+    }
     public void addPoint2D(final @NotNull Point2D point){
         points.add(point);
     }

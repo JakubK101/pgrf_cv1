@@ -59,7 +59,9 @@ public class Canvas {
 			}
 		};
 
+
 		panel.setPreferredSize(new Dimension(width, height));
+
 
 		panel.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
@@ -67,7 +69,7 @@ public class Canvas {
 				clear();
 
 
-				img.setPixel(e.getX(),e.getY(),0xff0000);
+				liner.drawLine(img, c1, r1, e.getX(), e.getY(), 0xff0000);
 				present();
 			}
 		});
@@ -75,12 +77,8 @@ public class Canvas {
 		panel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-
 				c1= e.getX();
 				r1= e.getY();
-				c2= e.getX();
-				r2=e.getY();
-				//liner.drawLine(c1,r1,c2,r2,0xff0000);
 
 
 			}
@@ -95,12 +93,20 @@ public class Canvas {
 			}
 		});
 
+		panel.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_T){
+
+				}
+			}
+		});
+
 		frame.add(panel, BorderLayout.CENTER);
 		frame.pack();
 		frame.setVisible(true);
 
 		panel.grabFocus();
-
 	}
 
 	public void clear() {
@@ -114,6 +120,7 @@ public class Canvas {
 	public void present(){
 		final Graphics g = panel.getGraphics();
 		if(g!=null){
+
 		presenter.present(g);}
 	}
 	public void draw() {
