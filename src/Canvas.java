@@ -68,7 +68,6 @@ public class Canvas {
 			public void mouseDragged(MouseEvent e) {
 				clear();
 
-
 				liner.drawLine(img, c1, r1, e.getX(), e.getY(), 0xff0000);
 				present();
 			}
