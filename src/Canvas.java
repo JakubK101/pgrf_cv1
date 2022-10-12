@@ -1,7 +1,10 @@
+import objectdata.Point2D;
+import objectdata.Polygon2D;
 import rasterdata.Presentable;
 import rasterdata.RasterImage;
 import rasterdata.RasterImageBI;
 import rasterops.Liner;
+import rasterops.Polygoner;
 import rasterops.TrivialLiner;
 
 import java.awt.BorderLayout;
@@ -31,8 +34,9 @@ public class Canvas {
 
 	private final Presentable<Graphics> presenter;
 	private final Liner<Integer> liner;
+	private Polygoner<Integer> polygoner;
 
-
+	private Polygon2D polygon;
 	private int c1,r1,c2,r2;
 
 	public Canvas(int width, int height) {
@@ -42,6 +46,9 @@ public class Canvas {
 		frame.setTitle("UHK FIM PGRF : " + this.getClass().getName());
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		polygon = new Polygon2D();
+		polygoner = new Polygoner<Integer>();
 
 		//img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		final RasterImageBI auxRasterImage = new RasterImageBI(width,height);
@@ -66,10 +73,10 @@ public class Canvas {
 		panel.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				clear();
+				//clear();
 
-				liner.drawLine(img, c1, r1, e.getX(), e.getY(), 0xff0000);
-				present();
+				//liner.drawLine(img, c1, r1, e.getX(), e.getY(), 0xff0000);
+				//present();
 			}
 		});
 
@@ -78,7 +85,11 @@ public class Canvas {
 			public void mousePressed(MouseEvent e) {
 				c1= e.getX();
 				r1= e.getY();
+				polygon.addPoint2D(new Point2D(c1,r1));
 
+				clear();
+				polygoner.drawPolygon(polygon,img,0xff0000,liner);
+				present();
 
 			}
 		});
