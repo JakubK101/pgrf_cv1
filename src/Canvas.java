@@ -3,6 +3,7 @@ import objectdata.Polygon2D;
 import rasterdata.Presentable;
 import rasterdata.RasterImage;
 import rasterdata.RasterImageBI;
+import rasterops.DashedTrivialLiner;
 import rasterops.Liner;
 import rasterops.Polygoner;
 import rasterops.TrivialLiner;
@@ -73,10 +74,10 @@ public class Canvas {
 		panel.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				//clear();
+				clear();
 
-				//liner.drawLine(img, c1, r1, e.getX(), e.getY(), 0xff0000);
-				//present();
+				liner.drawLine(img, c1, r1, e.getX(), e.getY(), 0xff0000);
+				present();
 			}
 		});
 
@@ -87,9 +88,9 @@ public class Canvas {
 				r1= e.getY();
 				polygon.addPoint2D(new Point2D(c1,r1));
 
-				clear();
-				polygoner.drawPolygon(polygon,img,0xff0000,liner);
-				present();
+				//clear();
+				//polygoner.drawPolygon(polygon,img,0xff0000,liner);
+				//present();
 
 			}
 		});
