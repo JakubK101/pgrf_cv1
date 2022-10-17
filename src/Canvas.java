@@ -51,11 +51,12 @@ public class Canvas {
 		polygon = new Polygon2D();
 		polygoner = new Polygoner<Integer>();
 
-		//img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		final RasterImageBI auxRasterImage = new RasterImageBI(width,height);
-		img = auxRasterImage;
-		presenter= auxRasterImage;
-		liner= new TrivialLiner<>();
+        //img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        final RasterImageBI auxRasterImage = new RasterImageBI(width, height);
+        img = auxRasterImage;
+        presenter = auxRasterImage;
+        liner = new TrivialLiner<>();
+        //liner= new DashedTrivialLiner<>();
 
 		panel = new JPanel() {
 			private static final long serialVersionUID = 1L;
@@ -71,29 +72,64 @@ public class Canvas {
 		panel.setPreferredSize(new Dimension(width, height));
 
 
-		panel.addMouseMotionListener(new MouseMotionAdapter() {
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				clear();
+        panel.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                //clear();
+                //liner.drawLine(img, c1, r1, e.getX(), e.getY(), 0xff0000);
+                //present();
+            }
+        });
 
-				liner.drawLine(img, c1, r1, e.getX(), e.getY(), 0xff0000);
-				present();
-			}
-		});
+        panel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                c1 = e.getX();
+                r1 = e.getY();
 
-		panel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				c1= e.getX();
-				r1= e.getY();
-				polygon.addPoint2D(new Point2D(c1,r1));
+                if (triangleMode) {
+                    frame.setTitle("Triangle mode");
+                    if (polygon.getPoints().size() < 3){
+                        polygon.addPoint2D(new Point2D(c1, r1));
 
-				//clear();
-				//polygoner.drawPolygon(polygon,img,0xff0000,liner);
-				//present();
 
-			}
-		});
+                    }
+                    else if (polygon.getPoints().size() ==2){
+                        //Střed mezi 2 body
+                        Point2D point1 = polygon.getPoint(0);
+                        Point2D point2 = polygon.getPoint(1);
+
+                        float v1 = point2.getX()- point1.getX();
+                        float v2 = point2.getY()-point1.getY();
+
+                        float v3 = -v2; //směr
+                        float v4 = v1;
+
+                        Point2D centerPoint = new Point2D((point1.getX()-point2.getX())/2, (point1.getY()-point2.getY()) /2);
+
+                        Point2D mousePoint = new Point2D(c1,r1);
+
+                        float u1 = centerPoint.getX()- mousePoint.getX();
+                        float u2 = centerPoint.getY()-mousePoint.getY();
+
+                        double vectorSize = Math.sqrt(Math.pow(u1, 2.0) + Math.pow(u2, 2.0)); // velikost
+
+
+
+
+                        clear();
+                        polygoner.drawPolygon(polygon, img, 0xff0000, liner);
+                        present();
+                    }
+                } else {
+                  // polygon.addPoint2D(new Point2D(c1, r1));
+                  //
+                  // clear();
+                  // polygoner.drawPolygon(polygon, img, 0xff0000, liner);
+                  // present();
+                }
+            }
+        });
 
 		panel.addKeyListener(new KeyAdapter() {
 			@Override
