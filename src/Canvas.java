@@ -99,21 +99,12 @@ public class Canvas {
                         Point2D point1 = polygon.getPoint(0);
                         Point2D point2 = polygon.getPoint(1);
 
-                        float v1 = point2.getX()- point1.getX();
-                        float v2 = point2.getY()-point1.getY();
 
-                        float v3 = -v2; //směr
-                        float v4 = v1;
-
-                        Point2D centerPoint = new Point2D((point1.getX()-point2.getX())/2, (point1.getY()-point2.getY()) /2);
+                        Point2D centerPoint = new Point2D((point2.getX()+point1.getX())/2, (point2.getY()+point1.getY()) /2);
 
                         Point2D mousePoint = new Point2D(c1,r1);
 
-                        float u1 = centerPoint.getX()- mousePoint.getX();
-                        float u2 = centerPoint.getY()-mousePoint.getY();
-
-                        double vectorSize = Math.sqrt(Math.pow(u1, 2.0) + Math.pow(u2, 2.0)); // velikost
-
+                        polygon.addPoint2D(mousePoint);
 
 
 
