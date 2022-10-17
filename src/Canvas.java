@@ -87,37 +87,36 @@ public class Canvas {
                 c1 = e.getX();
                 r1 = e.getY();
 
-                if (triangleMode) {
-                    frame.setTitle("Triangle mode");
-                    if (polygon.getPoints().size() < 3){
-                        polygon.addPoint2D(new Point2D(c1, r1));
+              if (tMode) {
+                  frame.setTitle("Triangle mode");
+                  if (polygon.getPoints().size() < 3){
+                      polygon.addPoint2D(new Point2D(c1, r1));
 
 
-                    }
-                    else if (polygon.getPoints().size() ==2){
-                        //Střed mezi 2 body
-                        Point2D point1 = polygon.getPoint(0);
-                        Point2D point2 = polygon.getPoint(1);
+                  }
+                  else if (polygon.getPoints().size() ==2){
+                      //Střed mezi 2 body
+                      Point2D point1 = polygon.getPoint(0);
+                      Point2D point2 = polygon.getPoint(1);
 
 
-                        Point2D centerPoint = new Point2D((point2.getX()+point1.getX())/2, (point2.getY()+point1.getY()) /2);
+                      Point2D centerPoint = new Point2D((point2.getX()+point1.getX())/2, (point2.getY()+point1.getY()) /2);
 
-                        Point2D mousePoint = new Point2D(c1,r1);
+                      Point2D mousePoint = new Point2D(c1,r1);
 
-                        polygon.addPoint2D(mousePoint);
+                      double k = (point2.getY() - point1.getY()) / (double) (point2.getX() - point1.getX());
+                      double q = point1.getY() - k * point1.getX();
 
-
-
-                        clear();
-                        polygoner.drawPolygon(polygon, img, 0xff0000, liner);
-                        present();
+                      clear();
+                      polygoner.drawPolygon(polygon, img, 0xff0000, liner);
+                      present();
                     }
                 } else {
-                  // polygon.addPoint2D(new Point2D(c1, r1));
-                  //
-                  // clear();
-                  // polygoner.drawPolygon(polygon, img, 0xff0000, liner);
-                  // present();
+                 // polygon.addPoint2D(new Point2D(c1, r1));
+                 //
+                 // clear();
+                 // polygoner.drawPolygon(polygon, img, 0xff0000, liner);
+                 // present();
                 }
             }
         });
