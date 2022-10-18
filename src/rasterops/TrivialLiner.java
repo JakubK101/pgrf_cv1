@@ -14,30 +14,30 @@ public class TrivialLiner<P> implements Liner<P> {
         double q = r1 - k * c1;
 
         if(k<1){
-            if (c1<c2) {
-                for (int c = c1; c <= c2; c++) {
+            if (c2<c1) {
+                for (int c = c2; c < c1; c++) {
                     int r = (int) Math.round(k * c + q);
                     img.setPixel(c, r, pixelValue);
                     }
 
                 }
             else{
-                for (int c = c2; c <= c1; c++) {
+                for (int c = c1; c < c2; c++) {
                     int r = (int) Math.round(k * c + q);
                     img.setPixel(c, r, pixelValue);
                 }
 
         }}
-       else if(k>1){
+       else {
         if (r2<r1) {
-          for (int r = r2; r <=r1; r++) {
+          for (int r = r2; r <r1; r++) {
               int c = (int) Math.round((r-q)/k);
               img.setPixel(c, r, pixelValue);
           }
 
           }
-      else {
-            for (int r = r1; r <= r2; r++) {
+        else {
+            for (int r = r1; r < r2; r++) {
                 int c = (int) Math.round((r - q) / k);
                 img.setPixel(c, r, pixelValue);
             }

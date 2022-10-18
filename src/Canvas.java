@@ -3,7 +3,10 @@ import objectdata.Polygon2D;
 import rasterdata.Presentable;
 import rasterdata.RasterImage;
 import rasterdata.RasterImageBI;
-import rasterops.*;
+import rasterops.DashedTrivialLiner;
+import rasterops.Liner;
+import rasterops.Polygoner;
+import rasterops.TrivialLiner;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -21,7 +24,7 @@ import javax.swing.WindowConstants;
  * trida pro kresleni na platno: zobrazeni pixelu
  * 
  * @author PGRF FIM UHK
- * @version 2022
+ * @version 2020
  */
 
 public class Canvas {
@@ -35,9 +38,6 @@ public class Canvas {
 	private Polygoner<Integer> polygoner;
 
 	private Polygon2D polygon;
-
-	private SeedFill<Integer> seedfill;
-
 	private int c1,r1,c2,r2;
 
 	private boolean tMode=false;
@@ -57,9 +57,8 @@ public class Canvas {
         final RasterImageBI auxRasterImage = new RasterImageBI(width, height);
         img = auxRasterImage;
         presenter = auxRasterImage;
-        liner = new TrivialLiner<>();
-		//liner= new DashedTrivialLiner<>();
-		seedfill = new SeedFill4<>();
+        liner = new TrivialLiner<>();      //přiřazení do lineru TrivialLiner(plná čára) nebo DashedTrivialLiner(přerušovaná)
+
 
 		panel = new JPanel() {
 			private static final long serialVersionUID = 1L;
@@ -78,9 +77,9 @@ public class Canvas {
         panel.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                //clear();
-                //liner.drawLine(img, c1, r1, e.getX(), e.getY(), 0xff0000);
-                //present();
+                /*clear();
+                liner.drawLine(img, c1, r1, e.getX(), e.getY(), 0xff0000);
+                present();  */
             }
         });
 
@@ -90,39 +89,38 @@ public class Canvas {
                 c1 = e.getX();
                 r1 = e.getY();
 
-              if (tMode) {
-                  frame.setTitle("Triangle mode");
-                  if (polygon.getPoints().size() < 3){
-                      polygon.addPoint2D(new Point2D(c1, r1));
+            /*if (tMode) {
+                frame.setTitle("Triangle mode");
+                if (polygon.getPoints().size() < 3){
+                    polygon.addPoint2D(new Point2D(c1, r1));
 
 
-                  }
-                  else if (polygon.getPoints().size() ==2){
-                      //Střed mezi 2 body
-                      Point2D point1 = polygon.getPoint(0);
-                      Point2D point2 = polygon.getPoint(1);
-
-
-                      Point2D centerPoint = new Point2D((point2.getX()+point1.getX())/2, (point2.getY()+point1.getY()) /2);
-
-                      Point2D mousePoint = new Point2D(c1,r1);
-
-                      double k = (point2.getY() - point1.getY()) / (double) (point2.getX() - point1.getX());
-                      double q = point1.getY() - k * point1.getX();
-
-                      clear();
-                      polygoner.drawPolygon(polygon, img, 0xff0000, liner);
-
-                      present();
-                    }
-                } else {
-                 // polygon.addPoint2D(new Point2D(c1, r1));
-                 //
-                 // clear();
-                 // polygoner.drawPolygon(polygon, img, 0xff0000, liner);
-                 // present();
                 }
-            }
+                else if (polygon.getPoints().size() ==2){
+                    //Střed mezi 2 body
+                    Point2D point1 = polygon.getPoint(0);
+                    Point2D point2 = polygon.getPoint(1);
+
+
+                    Point2D centerPoint = new Point2D((point2.getX()+point1.getX())/2, (point2.getY()+point1.getY()) /2);
+
+                    Point2D mousePoint = new Point2D(c1,r1);
+
+                    double k = (point2.getY() - point1.getY()) / (double) (point2.getX() - point1.getX());
+                    double q = point1.getY() - k * point1.getX();
+
+                    clear();
+                    polygoner.drawPolygon(polygon, img, 0xff0000, liner);
+                    present();
+                  }
+              } else {*/
+                  polygon.addPoint2D(new Point2D(c1, r1));
+
+                  clear();
+                  polygoner.drawPolygon(polygon, img, 0xff0000, liner);
+                  present();
+                }
+           // }
         });
 
 		panel.addKeyListener(new KeyAdapter() {
@@ -130,6 +128,7 @@ public class Canvas {
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_C){
 				clear();
+				polygon.getPoints().clear();
 				present();}
 			}
 		});
@@ -138,7 +137,7 @@ public class Canvas {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_T){
-					tMode =!tMode;
+					tMode = !tMode;
 				}
 			}
 		});
@@ -152,6 +151,7 @@ public class Canvas {
 
 	public void clear() {
 		img.clear(0x2f2f2f);
+
 	}
 
 	public void present(Graphics graphics) {
