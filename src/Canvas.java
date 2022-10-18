@@ -3,10 +3,7 @@ import objectdata.Polygon2D;
 import rasterdata.Presentable;
 import rasterdata.RasterImage;
 import rasterdata.RasterImageBI;
-import rasterops.DashedTrivialLiner;
-import rasterops.Liner;
-import rasterops.Polygoner;
-import rasterops.TrivialLiner;
+import rasterops.*;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -24,7 +21,7 @@ import javax.swing.WindowConstants;
  * trida pro kresleni na platno: zobrazeni pixelu
  * 
  * @author PGRF FIM UHK
- * @version 2020
+ * @version 2022
  */
 
 public class Canvas {
@@ -38,7 +35,12 @@ public class Canvas {
 	private Polygoner<Integer> polygoner;
 
 	private Polygon2D polygon;
+
+	private SeedFill<Integer> seedfill;
+
 	private int c1,r1,c2,r2;
+
+	private boolean tMode=false;
 
 	public Canvas(int width, int height) {
 		frame = new JFrame();
@@ -56,7 +58,8 @@ public class Canvas {
         img = auxRasterImage;
         presenter = auxRasterImage;
         liner = new TrivialLiner<>();
-        //liner= new DashedTrivialLiner<>();
+		//liner= new DashedTrivialLiner<>();
+		seedfill = new SeedFill4<>();
 
 		panel = new JPanel() {
 			private static final long serialVersionUID = 1L;
@@ -109,6 +112,7 @@ public class Canvas {
 
                       clear();
                       polygoner.drawPolygon(polygon, img, 0xff0000, liner);
+
                       present();
                     }
                 } else {
@@ -134,7 +138,7 @@ public class Canvas {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_T){
-
+					tMode =!tMode;
 				}
 			}
 		});
