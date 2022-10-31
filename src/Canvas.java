@@ -3,10 +3,7 @@ import objectdata.Polygon2D;
 import rasterdata.Presentable;
 import rasterdata.RasterImage;
 import rasterdata.RasterImageBI;
-import rasterops.DashedTrivialLiner;
-import rasterops.Liner;
-import rasterops.Polygoner;
-import rasterops.TrivialLiner;
+import rasterops.*;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -24,7 +21,7 @@ import javax.swing.WindowConstants;
  * trida pro kresleni na platno: zobrazeni pixelu
  * 
  * @author PGRF FIM UHK
- * @version 2020
+ * @version 2022
  */
 
 public class Canvas {
@@ -38,9 +35,12 @@ public class Canvas {
 	private Polygoner<Integer> polygoner;
 
 	private Polygon2D polygon;
-	private int c1,r1,c2,r2;
 
-	private boolean tMode=false;
+	private SeedFill seedFill4;
+	private SeedFill seedFill8;
+	private int c1,r1;
+
+
 
 	public Canvas(int width, int height) {
 		frame = new JFrame();
@@ -50,15 +50,17 @@ public class Canvas {
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
+
 		polygon = new Polygon2D();
 		polygoner = new Polygoner<Integer>();
+		seedFill4= new SeedFill4();
+		seedFill8= new SeedFill8();
 
         //img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         final RasterImageBI auxRasterImage = new RasterImageBI(width, height);
         img = auxRasterImage;
         presenter = auxRasterImage;
-        liner = new TrivialLiner<>();      //přiřazení do lineru TrivialLiner(plná čára) nebo DashedTrivialLiner(přerušovaná)
-
+        liner = new TrivialLiner<>();      //přiřazení do lineru - TrivialLiner(plná čára) / DashedTrivialLiner(přerušovaná)
 
 		panel = new JPanel() {
 			private static final long serialVersionUID = 1L;
@@ -79,48 +81,28 @@ public class Canvas {
             public void mouseDragged(MouseEvent e) {
                 /*clear();
                 liner.drawLine(img, c1, r1, e.getX(), e.getY(), 0xff0000);
-                present();  */
+                present();*/
             }
         });
 
         panel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                c1 = e.getX();
-                r1 = e.getY();
+               if (e.getButton()==MouseEvent.BUTTON1) {
+				   c1 = e.getX();
+				   r1 = e.getY();
 
-            /*if (tMode) {
-                frame.setTitle("Triangle mode");
-                if (polygon.getPoints().size() < 3){
-                    polygon.addPoint2D(new Point2D(c1, r1));
+				   polygon.addPoint2D(new Point2D(c1, r1));
 
+				   clear();
+				   polygoner.drawPolygon(polygon, img, 0xff0000, liner);
+				   present();
+			   } else if (e.getButton()==MouseEvent.BUTTON3) {
+				   //seedFill4.fill(img,c1,r1,0xff0000,);
+			   }
 
-                }
-                else if (polygon.getPoints().size() ==2){
-                    //Střed mezi 2 body
-                    Point2D point1 = polygon.getPoint(0);
-                    Point2D point2 = polygon.getPoint(1);
+			}
 
-
-                    Point2D centerPoint = new Point2D((point2.getX()+point1.getX())/2, (point2.getY()+point1.getY()) /2);
-
-                    Point2D mousePoint = new Point2D(c1,r1);
-
-                    double k = (point2.getY() - point1.getY()) / (double) (point2.getX() - point1.getX());
-                    double q = point1.getY() - k * point1.getX();
-
-                    clear();
-                    polygoner.drawPolygon(polygon, img, 0xff0000, liner);
-                    present();
-                  }
-              } else {*/
-                  polygon.addPoint2D(new Point2D(c1, r1));
-
-                  clear();
-                  polygoner.drawPolygon(polygon, img, 0xff0000, liner);
-                  present();
-                }
-           // }
         });
 
 		panel.addKeyListener(new KeyAdapter() {
@@ -137,7 +119,7 @@ public class Canvas {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_T){
-					tMode = !tMode;
+
 				}
 			}
 		});
@@ -145,6 +127,7 @@ public class Canvas {
 		frame.add(panel, BorderLayout.CENTER);
 		frame.pack();
 		frame.setVisible(true);
+
 
 		panel.grabFocus();
 	}
@@ -165,8 +148,6 @@ public class Canvas {
 		presenter.present(g);}
 	}
 	public void draw() {
-
-
 
 	}
 

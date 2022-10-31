@@ -36,7 +36,17 @@ public class Edge {
     }
 
     public int instersect(final int y){
-        //TODO
-        return 0;
+        if(y==start.getY())
+            return start.getX();
+        if(y== end.getY())
+            return end.getX();
+
+        if (start.getX()==end.getX()){
+            return start.getX();
+        }
+        float k = (end.getY()-start.getY())/((float)(end.getX()-start.getX()));
+        float q = start.getY() - k * start.getX();
+
+        return Math.round((y-q)/k);
     }
 }
