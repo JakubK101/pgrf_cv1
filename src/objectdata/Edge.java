@@ -35,7 +35,7 @@ public class Edge {
         return  new Edge(end,start);
     }
 
-    public int instersect(final int y){
+    public int instersect(final int y){ //prúsečík
         if(y==start.getY())
             return start.getX();
         if(y== end.getY())
