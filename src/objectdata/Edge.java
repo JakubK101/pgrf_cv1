@@ -4,10 +4,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class Edge {
 
-    final @NotNull Point2D start;
-    final @NotNull Point2D end;
+    final @NotNull Point start;
+    final @NotNull Point end;
 
-    public Edge(@NotNull Point2D start, @NotNull Point2D end) {
+    public Edge(@NotNull Point start, @NotNull Point end) {
         this.start = start;
         this.end = end;
     }

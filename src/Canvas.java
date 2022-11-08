@@ -1,4 +1,4 @@
-import objectdata.Point2D;
+import objectdata.Point;
 import objectdata.Polygon2D;
 import rasterdata.Presentable;
 import rasterdata.RasterImage;
@@ -6,11 +6,9 @@ import rasterdata.RasterImageBI;
 import rasterops.*;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -92,7 +90,7 @@ public class Canvas {
 				   c1 = e.getX();
 				   r1 = e.getY();
 
-				   polygon.addPoint2D(new Point2D(c1, r1));
+				   polygon.addPoint2D(new Point(c1, r1));
 
 				   clear();
 				   polygoner.drawPolygon(polygon, img, 0xff0000, liner);
@@ -112,6 +110,10 @@ public class Canvas {
 				clear();
 				polygon.getPoints().clear();
 				present();}
+
+				if(e.getKeyCode()==KeyEvent.VK_1){
+
+				}
 			}
 		});
 

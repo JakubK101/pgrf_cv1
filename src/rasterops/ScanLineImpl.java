@@ -1,19 +1,18 @@
 package rasterops;
 
 import objectdata.Edge;
-import objectdata.Point2D;
+import objectdata.Point;
 import objectdata.Polygon2D;
 import org.jetbrains.annotations.NotNull;
 import rasterdata.RasterImage;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ScanLineImpl<P> implements ScanLine<P>{
     @Override
     public void fill(@NotNull RasterImage<P> img, @NotNull Polygon2D polygon, @NotNull P areaPixel, @NotNull Polygoner<P> polygoner, @NotNull Liner<P> liner, @NotNull P polygonPixel) {
-        List<Point2D> points = polygon.getPoints();
+        List<Point> points = polygon.getPoints();
         List<Edge> edges= new ArrayList<>();
 
         for(int i =0;i<points.size();i++){
@@ -28,27 +27,20 @@ public class ScanLineImpl<P> implements ScanLine<P>{
         double yMin= points.get(0).getY();
         double yMax= points.get(points.size()).getY();
 
-        for(Point2D point : points){
+        for(Point point : points){
             if (point.getY()<yMin){
                 yMin= point.getY();
             }
-        }
-        for (Point2D point1: points){
-            if(point1.getY()>yMax){
-                yMax=point1.getY();
+            else if(point.getY()>yMax){
+                yMax=point.getY();
             }
-
-        }
-
-
-
-
         }
 
 
 
 
 
+        }
 
         //fill the list with edges
         //remove horizontal lines

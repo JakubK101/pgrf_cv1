@@ -1,6 +1,6 @@
 package rasterops;
 
-import objectdata.Point2D;
+import objectdata.Point;
 import objectdata.Polygon2D;
 import org.jetbrains.annotations.NotNull;
 import rasterdata.RasterImage;
@@ -12,13 +12,13 @@ public class Polygoner<P> {
 
     public void drawPolygon(final @NotNull Polygon2D polygon, final @NotNull RasterImage<P> img, final @NotNull P pixelValue, final @NotNull Liner<P> liner){
 
-        Iterator<Point2D> point2DIterator = polygon.getPoints().iterator();
-        Optional<Point2D> lastEnd = Optional.empty();
+        Iterator<Point> point2DIterator = polygon.getPoints().iterator();
+        Optional<Point> lastEnd = Optional.empty();
         boolean iterate = point2DIterator.hasNext();
 
         while (iterate) {
-            Point2D a = lastEnd.isEmpty() ? point2DIterator.next() : lastEnd.get();
-            Point2D b;
+            Point a = lastEnd.isEmpty() ? point2DIterator.next() : lastEnd.get();
+            Point b;
 
             if (point2DIterator.hasNext()) {
                 b = point2DIterator.next();
