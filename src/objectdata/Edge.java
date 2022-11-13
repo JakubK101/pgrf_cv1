@@ -31,8 +31,9 @@ public class Edge {
      * @return
      */
     public @NotNull Edge shortened(){
-       //TODO
-        return  new Edge(end,start);
+        Point2D end1 = new Point2D(end.getX(), end.getY()-1);
+
+        return  new Edge(end1,start);
     }
 
     public int instersect(final int y){ //prúsečík

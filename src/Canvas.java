@@ -1,4 +1,4 @@
-import objectdata.Point;
+import objectdata.Point2D;
 import objectdata.Polygon2D;
 import rasterdata.Presentable;
 import rasterdata.RasterImage;
@@ -6,9 +6,12 @@ import rasterdata.RasterImageBI;
 import rasterops.*;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.util.function.Predicate;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -34,8 +37,10 @@ public class Canvas {
 
 	private Polygon2D polygon;
 
-	private SeedFill seedFill4;
+	private SeedFill4<Integer> seedFill4;
 	private SeedFill seedFill8;
+
+	private ScanLine<Integer> scanLine;
 	private int c1,r1;
 
 
@@ -49,10 +54,13 @@ public class Canvas {
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 
+
+
 		polygon = new Polygon2D();
 		polygoner = new Polygoner<Integer>();
-		seedFill4= new SeedFill4();
+		seedFill4= new SeedFill4<Integer>();
 		seedFill8= new SeedFill8();
+		scanLine = new ScanLineImpl<Integer>();
 
         //img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         final RasterImageBI auxRasterImage = new RasterImageBI(width, height);
@@ -90,13 +98,19 @@ public class Canvas {
 				   c1 = e.getX();
 				   r1 = e.getY();
 
-				   polygon.addPoint2D(new Point(c1, r1));
+				   polygon.addPoint2D(new Point2D(c1, r1));
 
 				   clear();
 				   polygoner.drawPolygon(polygon, img, 0xff0000, liner);
 				   present();
 			   } else if (e.getButton()==MouseEvent.BUTTON3) {
+				   c1 = e.getX();
+				   r1 = e.getY();
 				   //seedFill4.fill(img,c1,r1,0xff0000,);
+
+				   present();
+
+
 			   }
 
 			}
@@ -110,18 +124,15 @@ public class Canvas {
 				clear();
 				polygon.getPoints().clear();
 				present();}
-
-				if(e.getKeyCode()==KeyEvent.VK_1){
-
-				}
 			}
 		});
 
 		panel.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_T){
-
+				if(e.getKeyCode() == KeyEvent.VK_S){
+					scanLine.fill(img,polygon,0xff0000,polygoner,liner,0xff0000);
+					present();
 				}
 			}
 		});

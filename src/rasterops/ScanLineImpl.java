@@ -1,46 +1,68 @@
 package rasterops;
 
 import objectdata.Edge;
-import objectdata.Point;
+import objectdata.Point2D;
 import objectdata.Polygon2D;
 import org.jetbrains.annotations.NotNull;
 import rasterdata.RasterImage;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ScanLineImpl<P> implements ScanLine<P>{
     @Override
     public void fill(@NotNull RasterImage<P> img, @NotNull Polygon2D polygon, @NotNull P areaPixel, @NotNull Polygoner<P> polygoner, @NotNull Liner<P> liner, @NotNull P polygonPixel) {
-        List<Point> points = polygon.getPoints();
+        List<Point2D> points = polygon.getPoints();
         List<Edge> edges= new ArrayList<>();
 
         for(int i =0;i<points.size();i++){
-            Edge edge =new Edge(points.get(i),points.get(i+1 % points.size()));
-            edges.add(edge);
+            Point2D start = points.get(i);
+            Point2D end = points.get(i+1 % points.size());
+
+            Edge edge =new Edge(start,end);
+            if(start.getY()==end.getY()){
+                continue;
+            }
+
+            edges.add(edge
+                    .oriented()
+                    .shortened());
 
         }
-        for(int i=0;i<edges.size();i++){
-            edges.get(i).oriented();
-            edges.get(i).shortened();
-        }
-        double yMin= points.get(0).getY();
-        double yMax= points.get(points.size()).getY();
 
-        for(Point point : points){
+        int yMin= points.get(0).getY();
+        int yMax= points.get(points.size()).getY();
+
+        for(Point2D point : points){
             if (point.getY()<yMin){
                 yMin= point.getY();
-            }
-            else if(point.getY()>yMax){
+            } else if (point.getY()>yMax) {
                 yMax=point.getY();
             }
         }
+            for(int y=yMin;y<yMax;y++){
+            List<Integer> intersections = new ArrayList<>();
 
+                for(Edge edge:edges){
+                    if(edge.hasInsersection(y)){
+                        intersections.add(edge.instersect(y));
+                    }
+                }
+                Collections.sort(intersections);
 
+                for (int i = 0;i<intersections.size();i+=2){
+                    if(intersections.size()>i+1){
+                        liner.drawLine(img,intersections.get(i),y,intersections.get(i+1),y,areaPixel);
+                    }
 
-
-
+                }
         }
+            polygoner.drawPolygon(polygon,img,polygonPixel,liner);
+
+
+    }
 
         //fill the list with edges
         //remove horizontal lines
