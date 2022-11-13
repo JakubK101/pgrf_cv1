@@ -6,7 +6,6 @@ import objectdata.Polygon2D;
 import org.jetbrains.annotations.NotNull;
 import rasterdata.RasterImage;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +32,7 @@ public class ScanLineImpl<P> implements ScanLine<P>{
         }
 
         int yMin= points.get(0).getY();
-        int yMax= points.get(points.size()).getY();
+        double yMax= points.get(points.size()).getY();
 
         for(Point2D point : points){
             if (point.getY()<yMin){
