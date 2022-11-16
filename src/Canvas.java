@@ -106,7 +106,7 @@ public class Canvas {
 			   } else if (e.getButton()==MouseEvent.BUTTON3) {
 				   c1 = e.getX();
 				   r1 = e.getY();
-				   //seedFill4.fill(img,c1,r1,0xff0000,);
+				   //seedFill4.fill(img,c1,r1,0xff0000);
 
 				   present();
 
