@@ -11,6 +11,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import javax.swing.JFrame;
@@ -106,8 +108,15 @@ public class Canvas {
 			   } else if (e.getButton()==MouseEvent.BUTTON3) {
 				   c1 = e.getX();
 				   r1 = e.getY();
-				   //seedFill4.fill(img,c1,r1,0xff0000,);
 
+				   img.getPixel(c1,r1).ifPresent(p->{
+					   seedFill4.fill(img,c1,r1,0xff0000, new Predicate<Integer>() {
+						   @Override
+						   public boolean test(Integer integer) {
+							   return !Objects.equals(0xff0000,0x000000);
+						   }
+					   });
+				   });
 				   present();
 
 
@@ -131,6 +140,7 @@ public class Canvas {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_S){
+
 					scanLine.fill(img,polygon,0xff0000,polygoner,liner,0xff0000);
 					present();
 				}
@@ -146,7 +156,7 @@ public class Canvas {
 	}
 
 	public void clear() {
-		img.clear(0x2f2f2f);
+		img.clear(0x000000);
 
 	}
 

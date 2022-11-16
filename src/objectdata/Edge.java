@@ -31,23 +31,19 @@ public class Edge {
      * @return
      */
     public @NotNull Edge shortened(){
-        Point2D end1 = new Point2D(end.getX(), end.getY()-1);
+        float k = (end.getY()-start.getY())/((float)(end.getX()-start.getX()));
+        float q = start.getY() - k * start.getX();
+        Point2D newY= new Point2D(end.getX(), end.getY()-1);
 
-        return  new Edge(end1,start);
+        if(start.getX()==end.getX()){
+            return new Edge(start,newY);
+        }
+        return new Edge(start,new Point2D(Math.round((newY.getY()-q)/k),newY.getY()));
     }
 
     public int instersect(final int y){ //prúsečík
-        if(y==start.getY())
-            return start.getX();
-        if(y== end.getY())
-            return end.getX();
-
-        if (start.getX()==end.getX()){
-            return start.getX();
-        }
         float k = (end.getY()-start.getY())/((float)(end.getX()-start.getX()));
         float q = start.getY() - k * start.getX();
-
         return Math.round((y-q)/k);
     }
 }

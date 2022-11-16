@@ -32,12 +32,13 @@ public class ScanLineImpl<P> implements ScanLine<P>{
         }
 
         int yMin= points.get(0).getY();
-        double yMax= points.get(points.size()).getY();
+        double yMax= points.get(0).getY();
 
         for(Point2D point : points){
             if (point.getY()<yMin){
                 yMin= point.getY();
-            } else if (point.getY()>yMax) {
+            }
+            if (point.getY()>yMax) {
                 yMax=point.getY();
             }
         }
@@ -52,9 +53,9 @@ public class ScanLineImpl<P> implements ScanLine<P>{
                 Collections.sort(intersections);
 
                 for (int i = 0;i<intersections.size();i+=2){
-                    if(intersections.size()>i+1){
+
                         liner.drawLine(img,intersections.get(i),y,intersections.get(i+1),y,areaPixel);
-                    }
+
 
                 }
         }
