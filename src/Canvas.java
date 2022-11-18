@@ -6,19 +6,15 @@ import rasterdata.RasterImageBI;
 import rasterops.*;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
+
 import java.util.Objects;
-import java.util.Optional;
+
 import java.util.function.Predicate;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 
 /**
  * trida pro kresleni na platno: zobrazeni pixelu
@@ -29,21 +25,25 @@ import javax.swing.WindowConstants;
 
 public class Canvas {
 
-	private JFrame frame;
-	private JPanel panel;
+	private final JFrame frame;
+	private final JPanel panel;
 	private final RasterImage<Integer> img;
 
 	private final Presentable<Graphics> presenter;
 	private final Liner<Integer> liner;
-	private Polygoner<Integer> polygoner;
+	private final Polygoner<Integer> polygoner;
 
-	private Polygon2D polygon;
 
-	private SeedFill4<Integer> seedFill4;
-	private SeedFill seedFill8;
 
-	private ScanLine<Integer> scanLine;
+	private final Polygon2D polygon;
+
+	private final SeedFill4<Integer> seedFill4;
+
+	private final ScanLine<Integer> scanLine;
+
 	private int c1,r1;
+
+	private int color;
 
 
 
@@ -56,19 +56,18 @@ public class Canvas {
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 
-
-
 		polygon = new Polygon2D();
-		polygoner = new Polygoner<Integer>();
-		seedFill4= new SeedFill4<Integer>();
-		seedFill8= new SeedFill8();
-		scanLine = new ScanLineImpl<Integer>();
+		//polygonClipper = new Polygon2D();
+		polygoner = new Polygoner<>();
+		seedFill4= new SeedFill4<>();
+		scanLine = new ScanLineImpl<>();
 
         //img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         final RasterImageBI auxRasterImage = new RasterImageBI(width, height);
         img = auxRasterImage;
         presenter = auxRasterImage;
-        liner = new TrivialLiner<>();      //přiřazení do lineru - TrivialLiner(plná čára) / DashedTrivialLiner(přerušovaná)
+        liner = new TrivialLiner<>();
+
 
 		panel = new JPanel() {
 			private static final long serialVersionUID = 1L;
@@ -110,10 +109,10 @@ public class Canvas {
 				   r1 = e.getY();
 
 				   img.getPixel(c1,r1).ifPresent(p->{
-					   seedFill4.fill(img,c1,r1,0xff0000, new Predicate<Integer>() {
+					   seedFill4.fill(img,c1,r1,color, new Predicate<>() {
 						   @Override
-						   public boolean test(Integer integer) {
-							   return !Objects.equals(0xff0000,0x000000);
+						   public boolean test(Integer pixelValue) {
+							   return Objects.equals(p,pixelValue);
 						   }
 					   });
 				   });
@@ -141,11 +140,27 @@ public class Canvas {
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_S){
 
-					scanLine.fill(img,polygon,0xff0000,polygoner,liner,0xff0000);
+					scanLine.fill(img,polygon,color,polygoner,liner,0xff0000);
 					present();
 				}
 			}
 		});
+		panel.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_R){
+					color = 0xff0000;
+				}
+				if(e.getKeyCode() == KeyEvent.VK_G){
+					color = 0x00ff00;
+				}
+				if(e.getKeyCode() == KeyEvent.VK_B){
+					color = 0x0000ff;
+				}
+
+			}
+		});
+
 
 		frame.add(panel, BorderLayout.CENTER);
 		frame.pack();
@@ -154,6 +169,8 @@ public class Canvas {
 
 		panel.grabFocus();
 	}
+
+
 
 	public void clear() {
 		img.clear(0x000000);

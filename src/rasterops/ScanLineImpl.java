@@ -18,7 +18,7 @@ public class ScanLineImpl<P> implements ScanLine<P>{
 
         for(int i =0;i<points.size();i++){
             Point2D start = points.get(i);
-            Point2D end = points.get(i+1 % points.size());
+            Point2D end = points.get((i+1) % points.size());
 
             Edge edge =new Edge(start,end);
             if(start.getY()==end.getY()){
@@ -32,7 +32,7 @@ public class ScanLineImpl<P> implements ScanLine<P>{
         }
 
         int yMin= points.get(0).getY();
-        double yMax= points.get(0).getY();
+        int yMax= points.get(0).getY();
 
         for(Point2D point : points){
             if (point.getY()<yMin){

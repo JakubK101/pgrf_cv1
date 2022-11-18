@@ -2,7 +2,7 @@ package rasterops;
 
 import rasterdata.RasterImage;
 
-import javax.swing.*;
+
 import java.util.Optional;
 import java.util.function.Predicate;
 

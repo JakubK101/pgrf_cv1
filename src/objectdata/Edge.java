@@ -12,6 +12,14 @@ public class Edge {
         this.end = end;
     }
 
+    public @NotNull Point2D getStart() {
+        return start;
+    }
+
+    public @NotNull Point2D getEnd() {
+        return end;
+    }
+
     public Edge oriented(){
         if(start.getY() > end.getY()){
             return new Edge(end,start);
@@ -28,7 +36,6 @@ public class Edge {
 
     /**
      * Returns this pixel shortened by one pixel, assumes start.y=!end.y
-     * @return
      */
     public @NotNull Edge shortened(){
         float k = (end.getY()-start.getY())/((float)(end.getX()-start.getX()));

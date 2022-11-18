@@ -17,14 +17,14 @@ public class TrivialLiner<P> implements Liner<P> {
 
         if(k<1 && k>-1){
             if (c2<c1) {
-                for (int c = c2; c < c1; c++) {
+                for (int c = c2; c <= c1; c++) {
                     int r = (int) Math.round(k * c + q);
                     img.setPixel(c, r, pixelValue);
                     }
 
                 }
             else{
-                for (int c = c1; c < c2; c++) {
+                for (int c = c1; c <= c2; c++) {
                     int r = (int) Math.round(k * c + q);
                     img.setPixel(c, r, pixelValue);
                 }
@@ -32,7 +32,7 @@ public class TrivialLiner<P> implements Liner<P> {
         }}
        else {
         if (r2<r1) {
-          for (int r = r2; r <r1; r++) {
+          for (int r = r2; r <=r1; r++) {
 
               int c =(c2==c1)? c2 : (int) Math.round((r-q)/k);
               img.setPixel(c, r, pixelValue);
@@ -40,7 +40,7 @@ public class TrivialLiner<P> implements Liner<P> {
 
           }
         else {
-            for (int r = r1; r < r2; r++) {
+            for (int r = r1; r <= r2; r++) {
                 int c =(c2==c1)? c2 : (int) Math.round((r-q)/k);
                 img.setPixel(c, r, pixelValue);
             }
