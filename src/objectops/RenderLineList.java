@@ -55,7 +55,8 @@ public class RenderLineList<P> implements Renderer<P>{
                     final Point3D start = solid.vertices().get(solid.indices().get(i));
                     final Point3D end = solid.vertices().get(solid.indices().get(i+1));
                 }
-                //for x and y lies within
+                //for x and y lies withing <-w, w>
+                        //for z lies withing <0, w>
 
         );
         //dehomog()
