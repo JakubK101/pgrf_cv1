@@ -1,5 +1,5 @@
 import objectdata.Cube;
-import objectdata.Point;
+import objectdata.Point2D;
 import objectdata.Polygon2D;
 import objectdata.Scene;
 import objectops.RenderLineList;
@@ -16,6 +16,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.*;
+import java.util.Objects;
+import java.util.function.Predicate;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -44,9 +46,13 @@ public class Canvas {
 	private SeedFill seedFill4;
 	private SeedFill seedFill8;
 
+	private final ScanLine<Integer> scanLine;
+
 	private RenderLineList renderer;
 	private Scene scene;
 	private int c1,r1;
+
+	private int color;
 
 
 
@@ -63,6 +69,7 @@ public class Canvas {
 		polygoner = new Polygoner<Integer>();
 		seedFill4= new SeedFill4();
 		seedFill8= new SeedFill8();
+		scanLine = new ScanLineImpl<>();
 		liner = new TrivialLiner<>();
 		final RasterImageBI auxRasterImage = new RasterImageBI(width, height);
 		img = auxRasterImage;
@@ -114,13 +121,24 @@ public class Canvas {
 				   c1 = e.getX();
 				   r1 = e.getY();
 
-				   polygon.addPoint2D(new Point(c1, r1));
+				   polygon.addPoint2D(new Point2D(c1, r1));
 
 				   clear();
 				   polygoner.drawPolygon(polygon, img, 0xff0000, liner);
 				   present();
 			   } else if (e.getButton()==MouseEvent.BUTTON3) {
-				   //seedFill4.fill(img,c1,r1,0xff0000,);
+				   c1 = e.getX();
+				   r1 = e.getY();
+
+				   img.getPixel(c1,r1).ifPresent(p->{
+					   seedFill4.fill(img,c1,r1,color, new Predicate<Integer>() {
+						   @Override
+						   public boolean test(Integer pixelValue) {
+							   return Objects.equals(p,pixelValue);
+						   }
+					   });
+				   });
+				   present();
 			   }
 
 			}
@@ -144,9 +162,26 @@ public class Canvas {
 		panel.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_T){
+				if(e.getKeyCode() == KeyEvent.VK_S){
 
+					scanLine.fill(img,polygon,color,polygoner,liner,0xff0000);
+					present();
 				}
+			}
+		});
+		panel.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_R){
+					color = 0xff0000;
+				}
+				if(e.getKeyCode() == KeyEvent.VK_G){
+					color = 0x00ff00;
+				}
+				if(e.getKeyCode() == KeyEvent.VK_B){
+					color = 0x0000ff;
+				}
+
 			}
 		});
 
