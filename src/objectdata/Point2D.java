@@ -1,13 +1,17 @@
 package objectdata;
 
-public class Point {
+public class Point2D {
 
     private  int x;
     private  int y;
 
-    public Point(int x, int y) {
+    public Point2D(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+    public Point2D(double x, double y) {
+        this.x = (int)Math.round(x);
+        this.y = (int)Math.round(y);
     }
 
     public int getX() {
@@ -19,11 +23,4 @@ public class Point {
         return y;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
 }

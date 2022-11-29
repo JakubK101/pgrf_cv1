@@ -7,11 +7,12 @@ import java.util.function.Predicate;
 
 public class SeedFill8<P> implements SeedFill<P>{
     @Override
-    public void fill(RasterImage<P> img, int c, int r, P pixelValue, Predicate<P> isInArea) {
-        Optional<P> currentPixel = img.getPixel(c,r);
-        if(currentPixel.isEmpty() || !isInArea.test(currentPixel.get())) {
+    public void fill(RasterImage<P> img, int c, int r, P pixelValue,Predicate<P> isInArea) {
+        Optional<P> currentPixel = img.getPixel(c, r);
+        if (currentPixel.isEmpty() || !isInArea.test(currentPixel.get())) {
             return;
         }
+
 
         img.setPixel(c,r,pixelValue);
 
