@@ -1,9 +1,16 @@
+import objectdata.Cube;
 import objectdata.Point;
 import objectdata.Polygon2D;
+import objectdata.Scene;
+import objectops.RenderLineList;
 import rasterdata.Presentable;
 import rasterdata.RasterImage;
 import rasterdata.RasterImageBI;
 import rasterops.*;
+import transforms.Camera;
+import transforms.Mat4PerspRH;
+import transforms.Vec2D;
+import transforms.Vec3D;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -36,6 +43,9 @@ public class Canvas {
 
 	private SeedFill seedFill4;
 	private SeedFill seedFill8;
+
+	private RenderLineList renderer;
+	private Scene scene;
 	private int c1,r1;
 
 
@@ -53,12 +63,26 @@ public class Canvas {
 		polygoner = new Polygoner<Integer>();
 		seedFill4= new SeedFill4();
 		seedFill8= new SeedFill8();
+		liner = new TrivialLiner<>();
+		final RasterImageBI auxRasterImage = new RasterImageBI(width, height);
+		img = auxRasterImage;
+
+		scene = new Scene();
+		scene.addSolid(new Cube());
+		final Vec3D pos = new Vec3D(2,4,3);
+		renderer = new RenderLineList<>(new Camera()
+				.withPosition(pos)
+				.withAzimuth(azimuthOrigin(pos))
+				.withZenith(zenithOrigin(pos)),
+				new Mat4PerspRH(Math.PI/4,1,0.1,200),
+				0xff0000,liner,img);
+
+
+
 
         //img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        final RasterImageBI auxRasterImage = new RasterImageBI(width, height);
-        img = auxRasterImage;
+
         presenter = auxRasterImage;
-        liner = new TrivialLiner<>();      //přiřazení do lineru - TrivialLiner(plná čára) / DashedTrivialLiner(přerušovaná)
 
 		panel = new JPanel() {
 			private static final long serialVersionUID = 1L;
@@ -154,9 +178,27 @@ public class Canvas {
 	}
 
 	public void start() {
-		draw();
+		renderer.renderScene(scene);
+		//draw();
 		panel.repaint();
 	}
+	private double azimuthOrigin(final Vec3D pos){
+		final Vec3D v = pos.opposite();
+		final double a = v.ignoreZ().normalized()
+				.map(vNorm->vNorm.dot(new Vec2D(1,0)))
+				.orElse(0.0);
+		return v.getY() > 0 ? a :2 *Math.PI - a;
+
+
+	}
+	private double zenithOrigin(final Vec3D pos){
+		final Vec3D v = pos.opposite();
+		final double  alpha = v.normalized()
+				.map(vNorm ->Math.acos(vNorm.dot(new Vec3D(0,0,1))))
+				.orElse(0.0);
+		return (Math.PI/2) - alpha;
+	}
+	//pos.dot(v); skalární součin vekorů
 
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() ->

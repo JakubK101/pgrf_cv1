@@ -21,7 +21,7 @@ public class RenderLineList<P> implements Renderer<P>{
     private Mat4 projectionMatrix;
 
 
-    public RenderLineList(P pixelVaule, Liner<P> liner, RasterImage<P> img, Camera camera, Mat4 modelMat){
+    public RenderLineList(Camera camera,Mat4 modelMat,P pixelVaule, Liner<P> liner, RasterImage<P> img){
         this.liner= liner;
         this.pixelValue=pixelVaule;
         this.img=img;
@@ -54,6 +54,25 @@ public class RenderLineList<P> implements Renderer<P>{
                 .forEach(i ->{
                     final Point3D start = solid.vertices().get(solid.indices().get(i));
                     final Point3D end = solid.vertices().get(solid.indices().get(i+1));
+
+                    if(start.getX()>= -start.getW() && start.getX()<= start.getW()
+                            && start.getY() >= -start.getW() && start.getY()<= start.getW()
+                            && start.getZ() >=0 && start.getZ() <=start.getW() &&
+                            end.getX()>= -end.getW() && end.getX()<= end.getW()
+                            && end.getY() >= -end.getW() && end.getY()<= end.getW()
+                            && end.getZ() >=0 && end.getZ() <=end.getW()) {
+                        start.dehomog().ifPresent(from -> end.dehomog().ifPresent(to->{
+                            final int c1 = (int) Math.round((from.getX()+1)/2 * img.getWidth());
+                            final int c2 = (int) Math.round((to.getX()+1)/2 * img.getWidth());
+                            final int r1 = (int) Math.round((1-(from.getY()+1)/2)*img.getHeight());
+                            final int r2 = (int) Math.round((1-(to.getY()+1)/2)*img.getHeight());
+
+                            liner.drawLine(img,c1,r1,c2,r2,pixelValue);
+
+
+                        }));
+
+                    }
                 }
                 //for x and y lies withing <-w, w>
                         //for z lies withing <0, w>
