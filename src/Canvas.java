@@ -1,7 +1,4 @@
-import objectdata.Cube;
-import objectdata.Point2D;
-import objectdata.Polygon2D;
-import objectdata.Scene;
+import objectdata.*;
 import objectops.RenderLineList;
 import rasterdata.Presentable;
 import rasterdata.RasterImage;
@@ -50,6 +47,7 @@ public class Canvas {
 
 	private RenderLineList renderer;
 	private Scene scene;
+
 	private int c1,r1;
 
 	private int color;
@@ -214,13 +212,16 @@ public class Canvas {
 
 	public void start() {
 		renderer.renderScene(scene);
+		present();
 		//draw();
 		panel.repaint();
+
+
 	}
 	private double azimuthOrigin(final Vec3D pos){
 		final Vec3D v = pos.opposite();
 		final double a = v.ignoreZ().normalized()
-				.map(vNorm->vNorm.dot(new Vec2D(1,0)))
+				.map(vNorm->Math.acos(vNorm.dot(new Vec2D(1,0))))
 				.orElse(0.0);
 		return v.getY() > 0 ? a :2 *Math.PI - a;
 

@@ -17,16 +17,15 @@ public class RenderLineList<P> implements Renderer<P>{
     private RasterImage<P> img;
 
     private Camera camera;
-    private Mat4 modelMat;
     private Mat4 projectionMatrix;
 
 
-    public RenderLineList(Camera camera,Mat4 modelMat,P pixelVaule, Liner<P> liner, RasterImage<P> img){
+    public RenderLineList(Camera camera,Mat4 projectionMatrix,P pixelVaule, Liner<P> liner, RasterImage<P> img){
         this.liner= liner;
         this.pixelValue=pixelVaule;
         this.img=img;
         this.camera= camera;
-        this.modelMat=modelMat;
+        this.projectionMatrix=projectionMatrix;
 
 
 
@@ -34,7 +33,7 @@ public class RenderLineList<P> implements Renderer<P>{
 
     @Override
     public void renderScene(Scene scene) {
-        for(int i =0; i <scene.getSolids().size()-1;i++){
+        for(int i =0; i <scene.getSolids().size();i++){
             renderSolid(scene.getSolids().get(i),scene.getModelMats().get(i));
 
         }
@@ -50,10 +49,10 @@ public class RenderLineList<P> implements Renderer<P>{
                 .map(p -> p.mul(transMatrix))
                 .toList();
         //cut according to w
-        IntStream.iterate(0,i->i+2).limit(solid.vertices().size()/2).parallel()
+        IntStream.iterate(0,i->i+2).limit(solid.indices().size()/2).parallel()
                 .forEach(i ->{
-                    final Point3D start = solid.vertices().get(solid.indices().get(i));
-                    final Point3D end = solid.vertices().get(solid.indices().get(i+1));
+                    final Point3D start = vertices.get(solid.indices().get(i));
+                    final Point3D end = vertices.get(solid.indices().get(i+1));
 
                     if(start.getX()>= -start.getW() && start.getX()<= start.getW()
                             && start.getY() >= -start.getW() && start.getY()<= start.getW()
