@@ -50,6 +50,8 @@ public class Canvas {
 
 	private int c1,r1;
 
+	private double step=0.1;
+
 	private int color;
 
 
@@ -80,7 +82,7 @@ public class Canvas {
 				.withAzimuth(azimuthOrigin(pos))
 				.withZenith(zenithOrigin(pos)),
 				new Mat4PerspRH(Math.PI/4,1,0.1,200),
-				0xff0000,liner,img);
+				0x00ff00,liner,img);
 
 
 
@@ -109,10 +111,18 @@ public class Canvas {
                 /*clear();
                 liner.drawLine(img, c1, r1, e.getX(), e.getY(), 0xff0000);
                 present();*/
+				double dc = c1 -e.getX();
+				double dr = r1 -e.getY();
+				c1=e.getX();
+				r1=e.getY();
+				renderer.setCamera(renderer.getCamera()
+						.addAzimuth(dc/ img.getWidth())
+						.addZenith(dr/ img.getHeight()));
+				rendererScene();
             }
         });
 
-        panel.addMouseListener(new MouseAdapter() {
+      /*  panel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                if (e.getButton()==MouseEvent.BUTTON1) {
@@ -139,9 +149,10 @@ public class Canvas {
 				   present();
 			   }
 
+
 			}
 
-        });
+        });*/
 
 		panel.addKeyListener(new KeyAdapter() {
 			@Override
@@ -151,19 +162,34 @@ public class Canvas {
 				polygon.getPoints().clear();
 				present();}
 
-				if(e.getKeyCode()==KeyEvent.VK_1){
-
-				}
 			}
 		});
 
 		panel.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_S){
+				if(e.getKeyCode() == KeyEvent.VK_V){
 
 					scanLine.fill(img,polygon,color,polygoner,liner,0xff0000);
 					present();
+				}
+
+
+				if(e.getKeyCode()==KeyEvent.VK_W){
+					renderer.setCamera(renderer.getCamera().forward(step));
+					rendererScene();
+				}
+				if(e.getKeyCode()==KeyEvent.VK_S){
+					renderer.setCamera(renderer.getCamera().backward(step));
+					rendererScene();
+				}
+				if(e.getKeyCode()==KeyEvent.VK_A){
+					renderer.setCamera(renderer.getCamera().left(step));
+					rendererScene();
+				}
+				if(e.getKeyCode()==KeyEvent.VK_D){
+					renderer.setCamera(renderer.getCamera().right(step));
+					rendererScene();
 				}
 			}
 		});
@@ -206,14 +232,16 @@ public class Canvas {
 
 		presenter.present(g);}
 	}
-	public void draw() {
-
+	private void rendererScene(){
+		clear();
+		renderer.renderScene(scene);
+		present();
 	}
 
 	public void start() {
 		renderer.renderScene(scene);
 		present();
-		//draw();
+
 		panel.repaint();
 
 

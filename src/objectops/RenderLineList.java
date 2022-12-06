@@ -78,9 +78,16 @@ public class RenderLineList<P> implements Renderer<P>{
 
         );
         //dehomog()
-
         //transformation to viewport
-
         //draw lines
+    }
+    @Override
+    public void setCamera(Camera camera) {
+        this.camera=camera;
+    }
+
+    @Override
+    public Camera getCamera() {
+        return camera;
     }
 }
